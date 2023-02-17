@@ -61,3 +61,69 @@ let new_student first_name last_name gpa = {first_name = first_name;
 (* exercise: date before *)
 let date_before (a, b, c) (a', b', c') = c < c' || a < a' || b < b'
 
+(* exercise: pokerecord *)
+type poketype = Normal | Fire | Water
+type pokemon = {name : string; hp : int; ptype : poketype}
+let charizard = {name = "charizard"; hp = 78; ptype = Fire}
+let squirtle = {name = "squirtle"; hp = 44; ptype = Water}
+
+(* exercise: pokefun *)
+let rec max_hp = function 
+  | [] -> 0
+  | h :: t -> max h.hp (max_hp t)
+
+(* exercise: cards *)
+type suit = Spades | Hearts | Clubs | Diamonds
+type rank = Ace | Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten |
+  Jack | Queen | King
+type card = {suit : suit; rank : rank}
+let ace_of_clubs = {suit = Clubs; rank = Ace}
+let queen_of_hearts = {suit = Hearts; rank = Queen}
+let two_of_diamonds = {suit = Diamonds; rank = Two}
+let seven_of_spades = {suit = Spades; rank = Seven}
+
+(* exercise: quadrant *)
+type quad = I | II | III | IV 
+type sign = Neg | Zero | Pos
+let sign x = if x > 0 then Pos else if x < 0 then Neg else Zero
+let quadrant : int*int -> quad option = fun (x, y) -> begin
+  match (sign x, sign y) with
+    | (Pos, Pos) -> Some I
+    | (Neg, Pos) -> Some II
+    | (Neg, Neg) -> Some III
+    | (Pos, Neg) -> Some IV
+    | (_, _) -> None
+end
+
+(* exercise: quadrant when *)
+let quadrant_when : int*int -> quad option = begin function
+  | x, y when sign x = Pos && sign y = Pos -> Some I
+  | x, y when sign x = Neg && sign y = Pos -> Some II
+  | x, y when sign x = Neg && sign y = Neg -> Some III
+  | x, y when sign x = Pos && sign y = Neg -> Some IV
+  | (_, _) -> None
+end
+
+(* exercise: depth *)
+type 'a tree = 
+  | Leaf
+  | Node of 'a * 'a tree * 'a tree
+let rec depth (tree : 'a tree) : int = match tree with
+  | Leaf -> 0
+  | Node (_, l ,r) -> 1 + max (depth l) (depth r)
+
+(* exercise: safe hd and tl *)
+let safe_hd : 'a list -> 'a option = function
+  | [] -> None
+  | h :: t -> Some h
+
+let rec safe_tl : 'a list -> 'a option = function
+  | [] -> None
+  | [h] -> Some h
+  | h :: t -> safe_tl t
+
+(* exercise: assoc list; *)
+let insert k v lst = (k, v) :: lst
+let rec lookup k = function
+  | [] -> None
+  | (k', v) :: t -> if k = k' then Some v else lookup k t
